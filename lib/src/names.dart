@@ -2,6 +2,7 @@ import 'dart:io' show HttpClient, HttpClientRequest, HttpClientResponse;
 import 'dart:convert' show utf8, json;
 import 'dart:async' show Completer;
 
+/// ISO2 Country Code to Country Name fetcher
 class Names {
   String targetURL;
   Names({this.targetURL: 'http://country.io/names.json'});

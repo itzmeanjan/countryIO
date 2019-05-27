@@ -2,6 +2,7 @@ import 'dart:io' show HttpClient, HttpClientRequest, HttpClientResponse;
 import 'dart:convert' show utf8, json;
 import 'dart:async' show Completer;
 
+/// ISO2 Country Code to Phone Code fetcher
 class Phone {
   String targetURL;
   Phone({this.targetURL: 'http://country.io/phone.json'});
