@@ -1,0 +1,7 @@
+name: country_io
+version: 1.0.0
+description: A simple country.io data parser, written in Dart :)
+author: Anjan Roy<anjanroy@yandex.com>
+homepage: https://github.com/itzmeanjan/countryIO
+environment:
+  sdk: '>=2.1.0 <3.0.0'
