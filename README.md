@@ -3,6 +3,8 @@ A simple country.io data parser, written with :heart: using Dart :)
 
 Show some :heart: by putting :star: :)
 
+**This plugin is readily available for [use](https://pub.dev/packages/country_io).** ... :running: ...
+
 ## what does it do ?
 This *Dart* package can be used to fetch country data from [country.io](http://country.io/), which includes *country iso2 code*, *country name*, *capital name*, *continent code*, *currency code* & *phone code*, which will be eventually stored in a json encoded file, whose path needs to be provided to `Generator` class constructor.
 
