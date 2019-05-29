@@ -11,12 +11,12 @@ Well using this package for generating json encoded file, holding country data, 
 
 Simply invoke `Generator` constructor with a valid path to target `data.json` file. Calling `Generator( ... ).generate()`, will start fetching data from country.io, then parsing data and json encoding data for storing in target file.
 
-This function will return a `Future<bool>`, to denote success or failure of operation.
+This function will return a `Future<Map<String, Map<String, String>>>`, an empty Map denotes failure, otherwise full parsed data set will be returned in form of Map.
 
 ```dart
 Generator('./data.json')
     .generate()
-    .then((result) => print(result ? 'Success' : 'Failed !!!'));
+    .then((result) => print(result.isNotEmpty ? 'Success' : 'Failed !!!'));
 ```
 
 Yes, it's that simple :wink:

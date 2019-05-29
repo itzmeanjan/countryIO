@@ -19,9 +19,9 @@ class Generator {
   String targetPath;
   Generator(this.targetPath);
 
-  /// Fetches all country data, encodes to json and write in a target json file, which is why it's main generator
-  Future<bool> generate() {
-    var completer = Completer<bool>();
+  /// Fetches all country data, encodes to json and write in a target json file, does all heavy lifting
+  Future<Map<String, Map<String, String>>> generate() {
+    var completer = Completer<Map<String, Map<String, String>>>();
     var allCountryData = <CountryData>[];
     Continent().fetch().then(
       (Map<String, String> data) {
@@ -66,44 +66,44 @@ class Generator {
                                   allCountryData[index++].currency = currency,
                             );
                             try {
+                              var tmp =
+                                  Map<String, Map<String, String>>.fromEntries(
+                                allCountryData.map(
+                                  (data) => MapEntry(
+                                        data.iso2,
+                                        data.getCountryDetails(),
+                                      ),
+                                ),
+                              ); // store processed data in temporary variable
                               File.fromUri(Uri.parse(targetPath)).openWrite(
                                   mode: FileMode.write)
                                 ..writeln(
                                   json.encode(
-                                    Map<String,
-                                        Map<String, String>>.fromEntries(
-                                      allCountryData.map(
-                                        (data) => MapEntry(
-                                              data.iso2,
-                                              data.getCountryDetails(),
-                                            ),
-                                      ),
-                                    ),
+                                    tmp,
                                   ),
                                 )
-                                ..close().then(
-                                    (val) => completer.complete(true),
-                                    onError: (e) => completer.complete(false));
+                                ..close().then((val) => completer.complete(tmp),
+                                    onError: (e) => completer.complete({}));
                             } on Exception {
-                              completer.complete(false);
+                              completer.complete({});
                             }
                           },
-                          onError: (e) => completer.complete(false),
+                          onError: (e) => completer.complete({}),
                         );
                       },
-                      onError: (e) => completer.complete(false),
+                      onError: (e) => completer.complete({}),
                     );
                   },
-                  onError: (e) => completer.complete(false),
+                  onError: (e) => completer.complete({}),
                 );
               },
-              onError: (e) => completer.complete(false),
+              onError: (e) => completer.complete({}),
             );
           },
-          onError: (e) => completer.complete(false),
+          onError: (e) => completer.complete({}),
         );
       },
-      onError: (e) => completer.complete(false),
+      onError: (e) => completer.complete({}),
     );
     return completer.future;
   }
