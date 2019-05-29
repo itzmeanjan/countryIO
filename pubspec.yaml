@@ -1,6 +1,6 @@
 name: country_io
 version: 1.0.0
-description: A simple country.io data parser, written in Dart :)
+description: A simple country.io data fetcher-cum-parser, which stores processed data in a target file( if provided ) and returns it, written in Dart :)
 author: Anjan Roy<anjanroy@yandex.com>
 homepage: https://github.com/itzmeanjan/countryIO
 environment:

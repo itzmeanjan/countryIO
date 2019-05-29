@@ -12,14 +12,38 @@ import 'country_data.dart';
 /// Data fetcher, parser and generator
 ///
 /// Fetches all country details using companion classes and store each of them in CountryData instance
-/// Finally encodes them in json string and writes into target file path provided in construtor
+/// Finally encodes them in json string and writes into target file path, if provided in construtor as named optional parameter
 ///
-/// Remember, target file path should be a json file, for which user has write permission
+/// Remember, target file path should be a json file, for which user has write permission, if it's provided
 class Generator {
   String targetPath;
-  Generator(this.targetPath);
+  Generator({this.targetPath});
 
   /// Fetches all country data, encodes to json and write in a target json file, does all heavy lifting
+  ///
+  /// Will return a Map<String, Map<String, String>> holding entry for each country, if successful else {}
+  ///
+  /// Every key of this map will be an iso2 country code, helping to identify a certain country
+  /// And value entry for that iso2 country code will be another Map<String, String>
+  ///
+  /// Example construct:
+  /// {
+  ///   .
+  ///   .
+  ///   .
+  ///   iso2:
+  ///   {
+  ///      'continent': continent ?? '',
+  ///      'name': name ?? '',
+  ///      'iso3': iso3 ?? '',
+  ///      'capital': capital ?? '',
+  ///      'phone': phone ?? '',
+  ///      'currency': currency ?? '',
+  ///    }
+  ///   .
+  ///   .
+  ///   .
+  /// }
   Future<Map<String, Map<String, String>>> generate() {
     var completer = Completer<Map<String, Map<String, String>>>();
     var allCountryData = <CountryData>[];
@@ -65,28 +89,34 @@ class Generator {
                               (iso2, currency) =>
                                   allCountryData[index++].currency = currency,
                             );
-                            try {
-                              var tmp =
-                                  Map<String, Map<String, String>>.fromEntries(
-                                allCountryData.map(
-                                  (data) => MapEntry(
-                                        data.iso2,
-                                        data.getCountryDetails(),
-                                      ),
-                                ),
-                              ); // store processed data in temporary variable
-                              File.fromUri(Uri.parse(targetPath)).openWrite(
-                                  mode: FileMode.write)
-                                ..writeln(
-                                  json.encode(
-                                    tmp,
-                                  ),
-                                )
-                                ..close().then((val) => completer.complete(tmp),
-                                    onError: (e) => completer.complete({}));
-                            } on Exception {
-                              completer.complete({});
-                            }
+                            var tmp =
+                                Map<String, Map<String, String>>.fromEntries(
+                              allCountryData.map(
+                                (data) => MapEntry(
+                                      data.iso2,
+                                      data.getCountryDetails(),
+                                    ),
+                              ),
+                            ); // store processed data in temporary variable
+                            if (targetPath != null)
+                              try {
+                                File.fromUri(Uri.parse(targetPath)).openWrite(
+                                    mode: FileMode.write)
+                                  ..writeln(
+                                    json.encode(
+                                      tmp,
+                                    ),
+                                  )
+                                  ..close().then(
+                                      (val) => completer.complete(tmp),
+                                      onError: (e) => completer.complete(
+                                          {})); // if file path is given for writing data into it, and operation is unsuccessful, a blank map will be returned
+                              } on Exception {
+                                completer.complete(
+                                    {}); // in case of exception, will return a blank map
+                              }
+                            else
+                              completer.complete(tmp);
                           },
                           onError: (e) => completer.complete({}),
                         );

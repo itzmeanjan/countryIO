@@ -13,6 +13,28 @@ Simply invoke `Generator` constructor with a valid path to target `data.json` fi
 
 This function will return a `Future<Map<String, Map<String, String>>>`, an empty Map denotes failure, otherwise full parsed data set will be returned in form of Map.
 
+Every key of this map will be an iso2 country code, helping to identify a certain country uniquely.
+```dart
+{
+     .
+     .
+     .
+     iso2:
+     {
+        'continent': continent ?? '',
+        'name': name ?? '',
+        'iso3': iso3 ?? '',
+        'capital': capital ?? '',
+        'phone': phone ?? '',
+        'currency': currency ?? '',
+      }
+     .
+     .
+     .
+   }
+```
+And value for a certain iso2 country code will be another `Map<String, String>`, holding detailed country info.
+
 ```dart
 Generator('./data.json')
     .generate()
